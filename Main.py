@@ -6,7 +6,6 @@ import plotly.express as px
 st.set_page_config(page_title = 'Residential Price Trends', layout = 'wide')
 
 #reading data from csv
-data = pd.read_csv('/Users/hemantchaudhary/Developer/PortfolioProjects/coordinates.csv')
 data = pd.read_csv('geocode_coordinates.csv')
 
 #adding dashboard title and r=description
