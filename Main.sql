@@ -1,5 +1,3 @@
--- drop table residex;
-
 -- creating database for project
 create database project;
 
@@ -10,7 +8,7 @@ set sql_safe_updates = 0;
 use project;
 select * from residex order by 1, 2;
 
--- assigning right names to columns
+-- assigning proper names to columns
 delete from residex where MyUnknownColumn = 'City';
 alter table residex rename column MyUnknownColumn to city;
 alter table residex rename column `MyUnknownColumn_[0]` to quarter;
@@ -19,7 +17,7 @@ alter table residex rename column `MyUnknownColumn_[1]` to onebhk;
 alter table residex rename column `MyUnknownColumn_[2]` to twobhk;
 alter table residex rename column `MyUnknownColumn_[3]` to threebhk;
 
--- cleaning data,changing data type where needed
+-- cleaning data & changing data type where needed
 update residex
 set quarter = str_to_date(concat(substring(quarter, 5, 4), substring(quarter, 1, 3), '01'), "%Y%b%d");
 update residex 
@@ -31,7 +29,7 @@ set twobhk = replace(twobhk, ',', '');
 update residex
 set threebhk = replace(threebhk, ',', '');
 
-
+-- handling exceptions where city column contains extra information enclosed in brackets
 update residex 
 set city = case 
 			when locate(' (', city) = 0 then
@@ -40,12 +38,14 @@ set city = case
 				substring(city, 1, locate(' (', city))
 			end;
 
+-- calculating QoQ change for each city and appartment size
 select 
 	*,
-    lag(onebhk) over(partition by city order by quarter) `%change_onebhk`,
-    lag(twobhk) over(partition by city order by quarter) `%change_twobhk`,
-    lag(threebhk) over(partition by city order by quarter) `%change_threebhk`
-from residex;
+    lag(onebhk) over(partition by city order by quarter) `change_onebhk`,
+    lag(twobhk) over(partition by city order by quarter) `change_twobhk`,
+    lag(threebhk) over(partition by city order by quarter) `change_threebhk`
+from residex
+order by city, quarter;
 
 select 
 	*,

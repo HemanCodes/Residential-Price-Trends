@@ -7,7 +7,9 @@ st.set_page_config(page_title = 'Residential Price Trends', layout = 'wide')
 
 #reading data from csv
 data = pd.read_csv('/Users/hemantchaudhary/Developer/PortfolioProjects/coordinates.csv')
+data = pd.read_csv('geocode_coordinates.csv')
 
+#adding dashboard title and r=description
 st.write('''
          # Residential Price Trends :chart_with_upwards_trend:
          ''')
@@ -25,12 +27,14 @@ with col1:
     label_visibility = 'collapsed'
     )
 
-    if city_select == '--- Select City ---' or city_select == None:
+    #default map if no selection
+    if city_select == '--- Select City ---':
         st.map(
             data, 
-            zoom = 3.3,                          #showing zoomed-out map of India
+            zoom = 3.3,                                      #showing zoomed-out map of India
             height = 485
         )
+    #map showing selected city
     else:
         st.map(
             data = data[data['city'] == city_select],       #showing selected city on map
@@ -42,6 +46,7 @@ with col1:
 with col2:
     tab1, tab2 = st.tabs(['Price Comparision based on Appartment Size', 'Price Comparision based on City Average'])
    
+   #tab showing comparision between different appartment size
     with tab1:
         size_select = st.pills(
         label = 'Select Appartment Size',
@@ -60,7 +65,7 @@ with col2:
             height= 400, 
             use_container_width= True
         )
-    
+    #tab showing comparision between different cities
     with tab2:
         st.markdown(
         "<p style='text-align: center; font-size: 14px; color: gray;'><em>Start comparing by selecting cities from the legend</em></p>",
@@ -75,7 +80,7 @@ with col2:
             height = 445
         )
 
-        #adding range slider
+        #adding range slider and selector
         fig.update_xaxes(
             rangeslider=dict(
                 visible=True,  # Enable the range slider
@@ -94,9 +99,9 @@ with col2:
             )
         )
 
-        #tweeking city legend
+        #hiding all traces expept Delhi
         for trace in fig.data:
-            if trace.name not in ['Delhi']:
+            if trace.name != 'Delhi':
                 trace.visible = 'legendonly'
 
         # Display the chart in Streamlit
@@ -106,24 +111,23 @@ st.write('---')                     #creating a horizontal divider
 
 col1, col2 = st.columns(2, gap = 'small', vertical_alignment = 'top')
 
-# tier1 = data[data['city'].isin(['Delhi', 'Pune'])]
-# st.write(tier1)
 
 
-with col1:
-    st.segmented_control(
-        label = 'N/A',
-        options = ['Tier-1', 'Tier-2', 'Tier-3'], 
-        selection_mode = 'single',
-        default = 'Tier-1', 
-        label_visibility = 'collapsed'
-    )
+# -------------- work in Progress / more featured coming ------------------
+# with col1:
+#     st.segmented_control(
+#         label = 'N/A',
+#         options = ['Tier-1', 'Tier-2', 'Tier-3'], 
+#         selection_mode = 'single',
+#         default = 'Tier-1', 
+#         label_visibility = 'collapsed'
+#     )
 
-    st.bar_chart(
-    data = data[data['city'] == 'Delhi'], 
-    x = 'quarter', 
-    y = '%change_onebhk', 
-    )
+#     st.bar_chart(
+#     data = data[data['city'] == 'Delhi'], 
+#     x = 'quarter', 
+#     y = '%change_onebhk', 
+#     )
     
 
 

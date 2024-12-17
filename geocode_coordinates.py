@@ -2,7 +2,7 @@ import pandas as pd
 from geopy.geocoders import Nominatim
 
 #reading data from csv
-data = pd.read_csv('/Users/hemantchaudhary/Downloads/Residex.csv')
+data = pd.read_csv('sql_output.csv')
 
 #initializing geolocator
 geolocator = Nominatim(user_agent = 'xyz')
@@ -17,7 +17,7 @@ def get_coordinates(DataFrame):
 
     for index, row in DataFrame.iterrows():
         if pd.isna(row['shift_city']) or row['city'] != row['shift_city']:
-            DataFrame.loc[index, 'longitude'] = geolocator.geocode(row['city']).longitude, 
+            DataFrame.loc[index, 'longitude'] = geolocator.geocode(row['city']).longitude
             DataFrame.loc[index, 'latitude'] = geolocator.geocode(row['city']).latitude
         else:
             DataFrame.loc[index, 'longitude'] = DataFrame.loc[index - 1, 'longitude']
@@ -26,6 +26,11 @@ def get_coordinates(DataFrame):
     DataFrame = DataFrame.drop('shift_city', axis = 1)
     return DataFrame
 
+print("This will take about 1 minute. Please wait")
+
 x = get_coordinates(data)
+print('Coordinates added successfully. Check the preview below')
 print(x.head())
+
+x.to_csv('geocode_coordinates.csv', index = True)
     
