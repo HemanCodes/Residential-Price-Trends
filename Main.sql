@@ -54,3 +54,20 @@ select
     round(((threebhk - lag(threebhk) over(partition by city order by quarter)) / lag(threebhk) over(partition by city order by quarter)) * 100, 3) `%change_threebhk`
 from residex
 order by city, quarter;
+
+-- calculating YoY change for each city and appartment size
+select 
+	*,
+    lag(onebhk, 4) over(partition by city order by quarter) `change_onebhk`,
+    lag(twobhk, 4) over(partition by city order by quarter) `change_twobhk`,
+    lag(threebhk, 4) over(partition by city order by quarter) `change_threebhk`
+from residex
+order by city, quarter;
+
+select 
+	city, onebhk,
+    round(((onebhk - lag(onebhk, 4) over(partition by city order by quarter)) / lag(onebhk) over(partition by city order by quarter)) * 100, 3) `%change_onebhk`,
+	round(((twobhk - lag(twobhk, 4) over(partition by city order by quarter)) / lag(twobhk) over(partition by city order by quarter)) * 100, 3) `%change_twobhk`,
+    round(((threebhk - lag(threebhk, 4) over(partition by city order by quarter)) / lag(threebhk) over(partition by city order by quarter)) * 100, 3) `%change_threebhk`
+from residex
+order by city, quarter;
