@@ -16,9 +16,9 @@ st.write('''
 st.write('This tool provides a comprehensive view of residential property price trends across various cities in India. We have taken a sample-set of 50 cities from different states and segments (Tier 1, Tier 2, and Tier 3). The dasbhoard offers a deeper understanding of market patterns and provides insights into price dynamics by enabling users to compare price trends between cities and apartment sizes (1BHK, 2BHK, 3BHK). This tool equips users with a data-driven approach to understanding the evolving real estate markets in India.')
 
 #creating page layout
-col1, col2 = st.columns(2, gap = 'large', vertical_alignment = 'top', border = True)
+colA1, colA2 = st.columns(2, gap = 'large', vertical_alignment = 'top', border = True)
 
-with col1:
+with colA1:
     #Selecting City Name
     city_select = st.selectbox(
     label = 'Select City Name',
@@ -43,7 +43,7 @@ with col1:
         )
         
 
-with col2:
+with colA2:
     tab1, tab2 = st.tabs(['Price Comparision based on Appartment Size', 'Price Comparision based on City Average'])
    
    #tab showing comparision between different appartment size
@@ -52,10 +52,21 @@ with col2:
         label = 'Select Appartment Size',
         options = ['onebhk', 'twobhk', 'threebhk'], 
         selection_mode = 'multi',
-        default = ['threebhk'],
+        default = ['threebhk'], 
+        format_func = lambda x : x.replace('bhk', ' BHK').upper()       #changing display format from onebhk to ONE BHK
         )
 
-        st.line_chart(
+        if city_select == '--- Select City ---':
+            st.markdown(
+            """
+            <div style='display: flex; justify-content: center;'>
+                <p>Please select a city to start comparison, or switch tab here 👆</p>
+            </div>
+            """,
+            unsafe_allow_html=True, 
+            )        
+        else:
+            st.line_chart(
             data = data[data['city'] == city_select],
             x = 'quarter', 
             y = size_select, 
@@ -64,7 +75,8 @@ with col2:
             color=None, 
             height= 400, 
             use_container_width= True
-        )
+            )
+            
     #tab showing comparision between different cities
     with tab2:
         st.markdown(
@@ -116,12 +128,12 @@ Tier_2_cities = ['Bhopal', 'Bhubaneswar', 'Chandigarh', 'Coimbatore', 'Dehradun'
 Tier_3_cities = ['Bhiwadi', 'Bidhan Nagar', 'Chakan', 'Guwahati', 'Howrah', 'Kalyan Dombivli', 'Ludhiana', 'Meerut', 'Mira Bhayander', 'New Town Kolkata', 'Panvel']
 
 
-col3, col2 = st.columns([6.5, 3.5], gap = 'small', vertical_alignment = 'top', border = True)
+colB1, colB2 = st.columns([6.5, 3.5], gap = 'small', vertical_alignment = 'top', border = True)
 
-with col3:
-    col5, col6, col7 = st.columns([3.1, 3, 3.8], gap = 'small', border = True, vertical_alignment = 'bottom')
+with colB1:
+    colB11, colB12, colB13 = st.columns([3.1, 3, 3.8], gap = 'small', border = True, vertical_alignment = 'bottom')
     
-    with col5:
+    with colB11:
         st.write('###### Tier based price trends')
         tier_select = st.segmented_control(
             label = 'N/A',
@@ -141,7 +153,7 @@ with col3:
             selected_cities = Tier_3_cities
             metric_delta = '-Low growth + recent slowdown'
   
-    with col6:
+    with colB12:
         quarter_select = st.segmented_control(
             label = 'Select Quarter', 
             options = ['Q1', 'Q2', 'Q3', 'Q4'], 
@@ -171,20 +183,18 @@ with col3:
             .reset_index()
         )
         
-    with col7:
+    with colB13:
         st.metric(
             label = 'Average return of last 5 years',
             value = filtered_data[['avg_YoY_change']].tail(5).mean(axis = 0).round(2),
             delta = metric_delta
         )
 
-        
-
     fig1 = px.bar(
         filtered_data, 
         x = 'quarter', 
         y = 'avg_YoY_change', 
-        labels = {'quarter' : 'Quarter', 'avg_YoY_change' : '% change QoQ'}, 
+        labels = {'quarter' : 'Quarter', 'avg_YoY_change' : '% change YoY'}, 
         height = 370, 
         color = 'avg_YoY_change', 
         color_continuous_scale = ['Red', 'Green']
@@ -201,4 +211,16 @@ with col3:
     st.plotly_chart(
         fig1, 
         use_container_width = False
+    )
+
+with colB2:
+    st.write('''### Key Insights''')
+    st.markdown(
+    """
+    - **Tier-1 cities** with established infrastructure offers stable and predictable returns, making them ideal for long-term investments
+    - **Tier-2 cities** offer attractive opportunities for moderate risk investors. Cities such as **Gurugram** are experiencing rapid growth, urbanization, and significant infrastructure development, enhancing the likelihood of achieving superior returns.
+    - **Tier 3 Cities** show limited development and offer lower investment potential, making them less attractive for short to medium-term gains.
+    ---
+    - **Q2** often shows strong growth due to fiscal-year-end activity and increased property transactions during this period.
+    """
     )
