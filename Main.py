@@ -223,7 +223,7 @@ with colB2:
     """
     )
 
-# -------------- work in Progress / more features coming ------------------
+# -------------- work in Progress / more features coming soon ------------------
 
-new_data = filtered_data[['quarter', 'avg_YoY_change']]
-new_data.to_csv('new_data.csv', index = False)
+# new_data = filtered_data[['quarter', 'avg_YoY_change']]
+# new_data.to_csv('new_data.csv', index = False)
