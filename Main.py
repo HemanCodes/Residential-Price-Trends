@@ -9,7 +9,7 @@ st.set_page_config(page_title = 'Residential Price Trends', layout = 'wide')
 data = pd.read_csv('geocode_coordinates.csv')
 data['quarter'] = pd.to_datetime(data['quarter'])            #converting quarter column to datetime format
 
-#adding dashboard title and r=description
+#adding dashboard title and description
 st.write('''
          # Residential Price Trends :chart_with_upwards_trend:
          ''')
@@ -121,8 +121,6 @@ with colA2:
 
 st.write('---')                                     #creating a horizontal divider
 
-# -------------- work in Progress / more features coming ------------------
-
 Tier_1_cities = ['Ahmedabad', 'Bengaluru', 'Chennai', 'Delhi', 'Hyderabad', 'Kolkata', 'Mumbai', 'Pune']
 Tier_2_cities = ['Bhopal', 'Bhubaneswar', 'Chandigarh', 'Coimbatore', 'Dehradun', 'Faridabad', 'Gandhinagar', 'Ghaziabad', 'Greater Noida', 'Gurugram', 'Indore', 'Jaipur', 'Kanpur', 'Kochi', 'Lucknow', 'Nagpur', 'Nashik', 'Navi Mumbai', 'Noida', 'Patna', 'Pimpri Chinchwad', 'Raipur', 'Rajkot', 'Ranchi', 'Surat', 'Thane', 'Vadodara', 'Vijayawada', 'Vizag']
 Tier_3_cities = ['Bhiwadi', 'Bidhan Nagar', 'Chakan', 'Guwahati', 'Howrah', 'Kalyan Dombivli', 'Ludhiana', 'Meerut', 'Mira Bhayander', 'New Town Kolkata', 'Panvel']
@@ -224,3 +222,8 @@ with colB2:
     - **Q2** often shows strong growth due to fiscal-year-end activity and increased property transactions during this period.
     """
     )
+
+# -------------- work in Progress / more features coming ------------------
+
+new_data = filtered_data[['quarter', 'avg_YoY_change']]
+new_data.to_csv('new_data.csv', index = False)
