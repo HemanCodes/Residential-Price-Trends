@@ -224,8 +224,11 @@ with colB2:
     - **Q2** often shows strong growth due to fiscal-year-end activity and increased property transactions during this period.
     """
     )
+st.write('---')                                     #creating a horizontal divider
 
-# -------------- work in Progress / more features coming soon ------------------
+st.write('''## Forecasted Growth''')
+st.write("Forecasting future price trends provides valuable insights for assessing market movements and investment opportunities. **While data-driven, these projections should be viewed alongside economic and policy factors for a well-rounded analysis.**")
+
 colC1, colC2, colC3 = st.columns([6.5, 10, 13.5], gap = 'small', vertical_alignment = 'top', border = False)
 
 with colC1:
@@ -237,11 +240,20 @@ elif(t_select == "Tier 2"):
     t_show = Tier_2_cities
 else:
     t_show = Tier_1_cities
+
 with colC2:
     c_select = st.selectbox(label = "Select City", options = t_show)
 
 df_all = get_forecast(c_select)
 
+with colC3: 
+    colC31, colC32 = st.columns([3.8, 6.2], gap = 'small', vertical_alignment = 'top', border = False)
+    with colC32:
+        st.metric(
+                label = 'Projected 4-quarter growth (%)',
+                value = round((df_all.iloc[-1, 0] - df_all.iloc[-5, 0]) * 100 / df_all.iloc[-5, 0], 2)
+            )
+    
 # Plot with Plotly Express
 fig = px.line(df_all, y='avg', color='type', 
               color_discrete_map={'Historical Prices': 'blue', 'Forecasted Prices': 'red'},

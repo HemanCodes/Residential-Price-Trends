@@ -1,6 +1,6 @@
 # Residential Price Trends Dashboard
 
-An interactive web application that visualizes residential property price trends across Indian cities, featuring geographical mapping and dynamic trend analysis.
+An interactive web application that visualizes residential property price trends across Indian cities, featuring geographical mapping, dynamic trend analysis, and future price forecasting.
 
 ## Features
 
@@ -14,6 +14,10 @@ An interactive web application that visualizes residential property price trends
     - Compares residential prices based on apartment size (1BHK, 2BHK, 3BHK) or city averages.
   - **Interactive Filters**:
     - Includes time range sliders for filtering price trends.
+  - **Forecasted Growth**:
+    - Provides future price trend predictions based on historical data.
+    - Enables city-level forecasting, offering insights into potential investment opportunities.
+    - Displays projected percentage growth over the next four quarters.
 
 ## Installation
 
@@ -47,10 +51,14 @@ Usage
 	•	Choose apartment sizes or cities to compare their price trends.
 	3.	Interactive Filters:
 	•	Adjust the time range slider to filter price trends for the desired period.
+  4. Forecasted Growth:
+  • Select a city and view projected price growth over the next four quarters.
+  • Compare historical and forecasted trends using visual plots.
 
 Data Sources
 	•	Residential property price data sourced from National Housing Bank.
 	•	Geographical coordinates obtained using the geopy library.
+  • Forecasting model leverages historical prices clubbed with ARIMA time-series forecasting model
 
 Contributing
 

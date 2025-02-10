@@ -19,7 +19,6 @@ def get_forecast(city):
     df = df.asfreq("QS-JUN") 
     df_city = df 
 
-
     # Transforming Data
     df.loc[:, "Log"] = np.log(df["avg"])            #applying log transformation
     df.loc[:, "LogDiff1"] = df["Log"].diff()        # 1st order differencing
@@ -42,6 +41,7 @@ def get_forecast(city):
     final_forecast["type"] = "Forecasted Prices"            #marking data as forecast
     historical = df_city.drop(data.columns[0], axis = 1)       #dropping city name
     df_all = pd.concat([historical, final_forecast])        #concatinating both
+    df_all.to_csv("city.csv")
 
     return df_all
 
