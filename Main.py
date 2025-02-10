@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+from forecast import get_forecast
+
 
 #setting streamlit page configurations
 st.set_page_config(page_title = 'Residential Price Trends', layout = 'wide')
@@ -60,7 +62,7 @@ with colA2:
             st.markdown(
             """
             <div style='display: flex; justify-content: center;'>
-                <p>Please select a city to start comparison, or switch tab here 👆</p>
+                <p><b>Please select a city to start comparison, or switch tab here 👆<b></p>
             </div>
             """,
             unsafe_allow_html=True, 
@@ -122,8 +124,8 @@ with colA2:
 st.write('---')                                     #creating a horizontal divider
 
 Tier_1_cities = ['Ahmedabad', 'Bengaluru', 'Chennai', 'Delhi', 'Hyderabad', 'Kolkata', 'Mumbai', 'Pune']
-Tier_2_cities = ['Bhopal', 'Bhubaneswar', 'Chandigarh', 'Coimbatore', 'Dehradun', 'Faridabad', 'Gandhinagar', 'Ghaziabad', 'Greater Noida', 'Gurugram', 'Indore', 'Jaipur', 'Kanpur', 'Kochi', 'Lucknow', 'Nagpur', 'Nashik', 'Navi Mumbai', 'Noida', 'Patna', 'Pimpri Chinchwad', 'Raipur', 'Rajkot', 'Ranchi', 'Surat', 'Thane', 'Vadodara', 'Vijayawada', 'Vizag']
-Tier_3_cities = ['Bhiwadi', 'Bidhan Nagar', 'Chakan', 'Guwahati', 'Howrah', 'Kalyan Dombivli', 'Ludhiana', 'Meerut', 'Mira Bhayander', 'New Town Kolkata', 'Panvel']
+Tier_2_cities = ['Bhopal', 'Bhubaneswar', 'Chandigarh ', 'Coimbatore', 'Dehradun', 'Faridabad', 'Gandhinagar', 'Ghaziabad', 'Greater Noida', 'Gurugram', 'Indore', 'Jaipur', 'Kanpur', 'Kochi', 'Lucknow', 'Nagpur', 'Nashik', 'Navi Mumbai', 'Noida', 'Patna', 'Pimpri Chinchwad', 'Raipur', 'Rajkot', 'Ranchi', 'Surat', 'Thane', 'Vadodara', 'Vijayawada', 'Vizag']
+Tier_3_cities = ['Bhiwadi', 'Bidhan Nagar ', 'Chakan', 'Guwahati', 'Howrah', 'Kalyan Dombivali', 'Ludhiana', 'Meerut', 'Mira Bhayander', 'New Town Kolkata', 'Panvel']
 
 
 colB1, colB2 = st.columns([6.5, 3.5], gap = 'small', vertical_alignment = 'top', border = True)
@@ -224,6 +226,24 @@ with colB2:
     )
 
 # -------------- work in Progress / more features coming soon ------------------
+colC1, colC2, colC3 = st.columns([6.5, 10, 13.5], gap = 'small', vertical_alignment = 'top', border = False)
 
-# new_data = filtered_data[['quarter', 'avg_YoY_change']]
-# new_data.to_csv('new_data.csv', index = False)
+with colC1:
+    t_select = st.radio(label = "Select Tier", options = ["Tier 1", "Tier 2", "Tier 3"], horizontal = True)
+
+if(t_select == "Tier 3"):
+    t_show = Tier_3_cities
+elif(t_select == "Tier 2"):
+    t_show = Tier_2_cities
+else:
+    t_show = Tier_1_cities
+with colC2:
+    c_select = st.selectbox(label = "Select City", options = t_show)
+
+df_all = get_forecast(c_select)
+
+# Plot with Plotly Express
+fig = px.line(df_all, y='avg', color='type', 
+              color_discrete_map={'Historical Prices': 'blue', 'Forecasted Prices': 'red'},
+              )
+st.plotly_chart(fig)
